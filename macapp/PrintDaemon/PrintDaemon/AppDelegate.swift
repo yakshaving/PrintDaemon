@@ -16,7 +16,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(-1)
   let port = 8080
   let printerName = "Matte_Daemon"
-  let ppdFile = "/usr/share/cups/model/PostscriptColor.ppd"
+  let ppdFile = "/tmp/MatteDaemon.ppd"
   
   func applicationDidFinishLaunching(aNotification: NSNotification) {
     let icon = NSImage(named: "star")
@@ -31,12 +31,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   @IBAction func addPrinter(sender: NSMenuItem) { _addPrinter() }
   
   private func _addPrinter(){
-    let task = NSTask()
-    task.launchPath = "/usr/sbin/lpadmin"
-    
-    task.arguments = ["-p", printerName, "-E", "-v", "http://localhost:\(self.port)/ipp", "-P", ppdFile]
-    task.launch()
-    task.waitUntilExit()
+    if let ppdURL = NSBundle.mainBundle().URLForResource("MatteDaemon", withExtension: "ppd"){
+      let printerPPD = NSData(contentsOfURL: ppdURL)
+      printerPPD?.writeToFile(ppdFile, atomically: true)
+      
+      let task = NSTask()
+      task.launchPath = "/usr/sbin/lpadmin"
+      
+      task.arguments = ["-p", printerName, "-E", "-v", "http://localhost:\(self.port)/ipp", "-P", ppdFile]
+      task.launch()
+      task.waitUntilExit()
+    } else {
+      println("failed to get ppd")
+    }
   }
   
   let responseObj = [
