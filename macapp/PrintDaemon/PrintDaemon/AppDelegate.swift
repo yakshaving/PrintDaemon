@@ -16,7 +16,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   let statusItem = NSStatusBar.systemStatusBar().statusItemWithLength(-1)
   let port = 8080
   let printerName = "Matte_Daemon"
-  let ppdFile = "/tmp/MatteDaemon.ppd"
+  let ppdFile = "Matte_Daemon.ppd"
   
   func applicationDidFinishLaunching(aNotification: NSNotification) {
     let icon = NSImage(named: "star")
@@ -82,9 +82,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
       default:
         return .NotFound
       }
-      
-      
-      
     }
     server.start(listenPort: 8080)
   }

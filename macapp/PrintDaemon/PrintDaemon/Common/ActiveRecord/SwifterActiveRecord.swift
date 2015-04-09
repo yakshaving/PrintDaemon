@@ -7,7 +7,11 @@
 import Foundation
 
 struct SwifterActiveRecordField {
-    let name: String? = "unknonw"
+    var name: String? = "unknonw"
+}
+
+struct Test {
+  var a: String = ""
 }
 
 protocol WithInit {
@@ -25,7 +29,7 @@ class SwifterActiveRecord<T: WithInit> {
         let classInfoDump = reflect(T())
         for var index = 1; index < classInfoDump.count; ++index {
             let field = classInfoDump[index]
-            results.append(SwifterActiveRecordField(name: field.0))
+            var s = SwifterActiveRecordField(name: field.0)
         }
         return results
     }
